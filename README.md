@@ -50,8 +50,14 @@ aws and aws cli `CDKDeployUser` credentials shared with e-mail.
         kubectl create -f k8s/deployment.yaml
         kubectl create -f k8s/service.yaml
     ```
-5. Get WebApi Url
-    `kubectl get svc`
+5. Run following to get web-app url
+    ```
+    kubectl get svc
+    ```
+    You should see something like:
+    ```
+        xxxxxxxxxxxxxx.eu-west-1.elb.amazonaws.com
+    ```
 
 
 
