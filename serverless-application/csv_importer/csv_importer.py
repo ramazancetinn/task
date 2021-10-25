@@ -13,7 +13,7 @@ class CsvImporter(core.Stack):
 
 
         # create dynamodb table named 'Movies'
-        dynamodb.Table(self, "Create DynamoDB Table",
+        table = dynamodb.Table(self, "Create DynamoDB Table",
             table_name="Movies",
             partition_key=dynamodb.Attribute(name="id", type=dynamodb.AttributeType.NUMBER)
         )
@@ -27,7 +27,10 @@ class CsvImporter(core.Stack):
                                         runtime=aws_lambda.Runtime.PYTHON_3_9,
                                         handler="lambda_handler.main",
                                         code=aws_lambda.Code.asset("./lambda"))
-
+        # grant access to function
+        bucket.grant_read_write(function)
+        table.grant_full_access(function)
+        
         # create an event notification for 's3 PUT'  only .csv files
         bucket.add_event_notification(s3.EventType.OBJECT_CREATED_PUT, 
                                         aws_s3_notifications.LambdaDestination(function),
