@@ -11,7 +11,8 @@ aws and aws cli `CDKDeployUser` credentials shared with e-mail.
 
 ### Deploy Serverless Application
 1. Go to `serverless-application` folder
-2. Run
+2. `python3 -m pip install -r requirements.txt ` 
+3. Run
     ```
         cdk bootstrap
         cdk deploy
@@ -19,16 +20,20 @@ aws and aws cli `CDKDeployUser` credentials shared with e-mail.
 
 ### Create EKS and ECR
 1. Go to `iaac` folder
-2. Run 
+2. `python3 -m pip install -r requirements.txt ` 
+3. Run 
     ```
         cdk bootstrap
         cdk deploy
     ```
-3. After ECR created you can login to ECR vai following commands (for MacOs/Linux)
+4. After ECR created you can login to ECR vai following commands (for MacOs/Linux)
     ```
         aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 050884211926.dkr.ecr.eu-west-1.amazonaws.com
     ```
-ECR is required for storing web-app docker image  
+5. After EKS created copy the ConfigCommand from your terminal output and execute it, it should look something like this:
+    ```
+    aws eks update-kubeconfig --name EKSStack-cluster --region eu-west-1 --role-arn arn:aws:iam::050884211926:role/EKSStack-iam
+    ```
 
 ### Build Web Application && Deploy Kubernetes
 1. Go to `web-app` folder
