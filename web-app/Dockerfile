@@ -1,17 +1,32 @@
-# base image
-FROM node:14-alpine
+# stage1 as builder
+FROM node:14.0-alpine as builder
 
-# create & set working directory
-RUN mkdir -p /usr/app
-WORKDIR /usr/app
+# copy the package.json to install dependencies
+COPY package.json package*.json ./
 
-# copy source files
-COPY . /usr/app
+# Install the dependencies and make the folder
+RUN npm install && mkdir /nextjs-ui && mv ./node_modules ./nextjs-ui
 
-# install dependencies
-RUN npm install
+WORKDIR /nextjs-ui
 
-# start app
+COPY . .
+
+# Build the project and copy the files
 RUN npm run build
-EXPOSE 3000
-CMD npm run start
+
+
+FROM nginx:alpine
+
+#!/bin/sh
+
+COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
+
+## Remove default nginx index page
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy from the stahg 1
+COPY --from=builder /nextjs-ui/out /usr/share/nginx/html
+
+EXPOSE 3000 80
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

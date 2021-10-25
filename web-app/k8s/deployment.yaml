@@ -16,4 +16,5 @@ spec:
         - image: 050884211926.dkr.ecr.eu-west-1.amazonaws.com/web-app:latest
           name: web-app
           ports:
-            - containerPort: 3000
+            - containerPort: 80
+      restartPolicy: Always
